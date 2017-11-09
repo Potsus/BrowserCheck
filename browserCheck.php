@@ -2,90 +2,7 @@
 
 class browser {
     private $picFolder = 'https://d11ms3y3p0fbtv.cloudfront.net/pictures/browser/';
-    private $supportedBrowsers = array(
-        'CriOS'     => array(
-            'recommend' => false,
-            'minVer'    => 22,
-            'name'      => 'chrome',
-            'fullName'  => 'Google Chrome',
-            'upgrade'   => '<a href="https://support.google.com/chrome/answer/95414?hl=en">Learn how to update Google Chrome</a>',
-            'download'  => array(
-                'iOS'           => 'https://itunes.apple.com/us/app/chrome-browser-by-google/id535886823?mt=8',
-                )
-            ),
-        'Chrome'    => array(
-            'recommend' => true,
-            'minVer'    => 22,
-            'name'      => 'chrome',
-            'fullName'  => 'Google Chrome',
-            'upgrade'   => '<a href="https://support.google.com/chrome/answer/95414?hl=en">Learn how to update Google Chrome</a>',
-            'download'  => array(
-                'Windows'       => 'https://www.google.com/intl/en/chrome/browser/?platform=win',
-                'OS X'          => 'https://www.google.com/intl/en/chrome/browser/?platform=mac',
-                'Linux'         => 'https://www.google.com/intl/en/chrome/browser/?platform=linux',
-                'Android'       => 'https://play.google.com/store/apps/details?id=com.android.chrome',
-                )
-            ),
-        'Firefox'   => array(
-            'recommend' => true,
-            'minVer'    => 8,
-            'name'      => 'firefox',
-            'fullName'  => 'Mozilla Firefox',
-            'upgrade'   => '<a href="https://support.mozilla.org/en-US/kb/update-firefox-latest-version">Learn how to update Firefox</a>',
-            'download'  => array(
-                'Windows'       => 'http://www.mozilla.org/en-US/firefox/all/',
-                'OS X'          => 'http://www.mozilla.org/en-US/firefox/all/',
-                'Linux'         => 'http://www.mozilla.org/en-US/firefox/all/',
-                'Android'       => 'https://play.google.com/store/apps/details?id=org.mozilla.firefox',
-                ),
-            ),
-        'Opera'     => array(
-            'recommend' => true,
-            'minVer'    => 12,
-            'name'      =>'opera',
-            'fullName'  =>'Opera',
-            'upgrade'   => '<a href="http://help.opera.com/Mac/10.50/en/autoupdate.html">Learn how to update Opera</a>',
-            'download'  => array(
-                'Windows'       => 'http://www.opera.com/computer/windows',
-                'OS X'          => 'http://www.opera.com/computer/mac',
-                'Linux'         => 'http://www.opera.com/computer/linux',
-                'iOS'           => 'https://itunes.apple.com/us/app/opera-mini-web-browser/id363729560?mt=8',
-                'Android'       => 'https://play.google.com/store/apps/details?id=com.opera.browser',
-                )
-            ),
-        'Coast'     => array(
-            'recommend' => true,
-            'minVer'    => 1,
-            'name'      =>'coast',
-            'fullName'  =>'Coast',
-            'upgrade'   => '',
-            'download'  => array(
-                'iOS'           => 'https://itunes.apple.com/us/app/chrome-browser-by-google/id535886823?mt=8',
-                )
-            ),
-        'Safari'    => array(
-            'recommend' => true,
-            'minVer'    => 5,
-            'name'      => 'safari',
-            'fullName'  => 'Apple Safari',
-            'upgrade'   => 'http://support.apple.com/kb/HT1338',
-            'download'  => array(
-                'Windows'       => 'http://support.apple.com/downloads/#safari',
-                'OS X'          => 'http://support.apple.com/downloads/#safari',
-                )
-            ),
-        'MSIE'      => array(
-            'recommend' => true,
-            'minVer'    => 9,
-            'name'      => 'ie',
-            'fullName'  => 'Internet Explorer',
-            'style'     => '',
-            'upgrade'   => 'http://windows.microsoft.com/en-us/internet-explorer/download-ie',
-            'download'  => array(
-                'Windows'       => 'http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages',
-                )
-            )
-    );
+    private $supportedBrowsers;
     
     //core strings
     public  $agentString                = '';
@@ -115,6 +32,7 @@ class browser {
     
     //gets all the browser info from the user agent
     public function __construct($agent = ''){
+        $this->supportedBrowsers = include("supported_browsers.php");
         if($agent === ''){
             $this->agentString = $_SERVER['HTTP_USER_AGENT'];
             error_log($this->agentString);
