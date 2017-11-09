@@ -49,6 +49,7 @@ class browser {
         $this->getInfo();
     }
     
+    //collect info about the browser from the user agent string
     private function getInfo(){
         
         $len = strlen($this->agentString);
@@ -228,6 +229,7 @@ class browser {
         }
     }
     
+    //match an opening parentheses with a close
     private function matchParen($string){
         if($string{0} != '(')return 0;
         $j = 1;
@@ -240,12 +242,14 @@ class browser {
         return $j;
     }
 
+    //skip over a space
     private function nextSpace($string){
         $j = 1;
         while($j < strlen($string) && $string{$j} != ' ')$j++;
         return $j;
     }
 
+    //split a string into name and version
     private function verSplit($string){
         if(strpos($string, '/') !== false){
             $obj = explode('/',$string);
@@ -260,6 +264,7 @@ class browser {
             );
     }
 
+    //check if you can access a url
     private function checkURL($url){
         $file_headers = @get_headers($url);
         //error_log($file_headers[0]);
@@ -267,6 +272,8 @@ class browser {
         else return true;
     }
     
+    //return weither the browser is supported or not
+    //TODO: split the support text into a different function
     public function isSupported(){
         if(!$this->supported && $this->supportText == ''){
             if(array_key_exists($this->name, $this->supportedBrowsers)){
@@ -295,6 +302,7 @@ class browser {
     
 
 
+    //draw the box with info about the browser
     public function drawBrowser(){
         $pad = '  ';
         if(array_key_exists($this->name, $this->supportedBrowsers)){
@@ -327,7 +335,7 @@ class browser {
 </table>';
     }
     
-
+    //draw downloads for reccomended browsers on the user's platform
     public function drawDownloads(){
         foreach($this->supportedBrowsers as $prefs){
             if($prefs['recommend']){
@@ -344,6 +352,8 @@ class browser {
         }
     }
     
+    //TODO: clean these up and reduce them down to less redundant functions
+    //ease of use functon to draw all the relevant info
     public function drawPage(){
         echo $this->drawBrowser();
         echo '<br>';
@@ -354,6 +364,7 @@ class browser {
         }
     }
 
+    //draw just info and support
     public function quickDraw(){
         echo $this->drawBrowser();
         echo '<br>';

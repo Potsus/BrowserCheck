@@ -39,21 +39,18 @@ function getVersion($string, $word){
     return substr($string,$offset,$offset+$i);
 }
 
+//Check if a user agent looks like it will work on this site
+//either take an agent string or get the current user agent
 function checkBrowser($uAgent = ''){
     if($uAgent === '') $uAgent = $_SERVER['HTTP_USER_AGENT']; 
 
     $specs = getBrowser($uAgent);
     //error_log($specs['name'].' ver: '.$specs['version']);
     //$shortVer = substr($specs['version'],0,strpos($specs['version'],'.'));
-    $browsers = array(
-        'CriOS'     => 22,
-        'Chrome'    => 22,
-        'Firefox'   => 8,
-        'Opera'     => 12,
-        'Coast'     => 1,
-        'Safari'    => 5,
-        'MSIE'      => 9,
-    );
+
+    //import the support config
+    $config = parse_ini_file('config.ini');
+    $browsers = $config[browsers];
     
     if(array_key_exists($specs['name'], $browsers) && $browsers[$specs['name']] < intval($specs['version'])) return true;
     else return false;

@@ -1,5 +1,5 @@
 <?php
-return array(
+$browsers = array(
     'CriOS'     => array(
         'recommend' => false,
         'minVer'    => 22,
@@ -83,4 +83,33 @@ return array(
             )
         )
 );
+
+$config = parse_ini_file('config.ini');
+foreach($config[browsers] as $browser => $version){
+    if(in_array($browser, $browsers)){
+        $browsers[$browser][minVer] = $version;
+    }
+    else{
+        //Fill in the missing browser or throw an error?
+        $browsers[$browser] = array(
+        'recommend' => true,
+        'minVer'    => $version,
+        'name'      => $browser,
+        'fullName'  => $browser,
+        'style'     => '',
+        'upgrade'   => '',
+        'download'  => array(
+            'Windows'       => '',
+            'OS X'          => '',
+            'Linux'         => '',
+            'iOS'           => '',
+            'Android'       => '',
+            )
+        );
+
+    }
+}
+
+//TODO: determine which browsers get returned based on config
+return $browsers;
 ?>
