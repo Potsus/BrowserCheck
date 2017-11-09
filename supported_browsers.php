@@ -1,4 +1,25 @@
 <?php
+
+// A template for each browsers options
+/*
+$template = array(
+    'recommend' => true, //weither to reccomend the browser
+    'minVer'    => 0,    //The minimum reccomended version
+    'name'      => '',
+    'fullName'  => '',
+    'style'     => '',   // a custom class to add to the info box
+    'upgrade'   => '',   // text to display when a user should upgrade their browser version
+    'download'  => array(   //download links for each platform
+        'Windows'       => '',
+        'OS X'          => '',
+        'Linux'         => '',
+        'iOS'           => '',
+        'Android'       => '',
+        )
+);
+*/
+
+//An array of browsers I have all the info for
 $browsers = array(
     'CriOS'     => array(
         'recommend' => false,
@@ -91,8 +112,13 @@ foreach($config[browsers] as $browser => $version){
     }
     else{
         //Fill in the missing browser or throw an error?
+        // throw an exception to stop a user from going live with a bad browser config
+        throw new Exception("Unknown Browser in config. Please add it to supported_browsers.php");
+        
+
+        /*
         $browsers[$browser] = array(
-        'recommend' => true,
+        'recommend' => false,
         'minVer'    => $version,
         'name'      => $browser,
         'fullName'  => $browser,
@@ -106,10 +132,11 @@ foreach($config[browsers] as $browser => $version){
             'Android'       => '',
             )
         );
+        */
 
     }
 }
 
-//TODO: determine which browsers get returned based on config
+//TODO: determine which browsers get returned based on config?
 return $browsers;
 ?>
