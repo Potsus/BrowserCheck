@@ -1,7 +1,9 @@
 <?php
 
+
 class browser {
-    private $picFolder = 'https://d11ms3y3p0fbtv.cloudfront.net/pictures/browser/';
+    private $config;
+    private $picFolder;
     private $supportedBrowsers;
     
     //core strings
@@ -32,7 +34,12 @@ class browser {
     
     //gets all the browser info from the user agent
     public function __construct($agent = ''){
+        //Setup with our config options
+        $this->config = parse_ini_file('config.ini');
         $this->supportedBrowsers = include("supported_browsers.php");
+        $this->picFolder = $this->config[picFolder];
+
+
         if($agent === ''){
             $this->agentString = $_SERVER['HTTP_USER_AGENT'];
             error_log($this->agentString);
@@ -141,12 +148,13 @@ class browser {
                 preg_match('/Windows NT (.*)/',$sys,$ver);
                 switch($ver[1]){
                     case '6.3':
+                        //stupid case for ie 11
                         if (strpos($this->agentString, 'rv:11.0') !== false && strpos($this->agentString, 'Trident/7.0') !== false) {
                             $this->name = 'MSIE';
                             $this->version = '11.0';
                             $this->layoutEngine = "Trident";
                             $this->supported = true;
-                            $this->supportText = "Your browser version and FastFig are fully compatible!   There is nothing to worry about.   Go do some math! <a href='..'>Go Back</a>";
+                            $this->supportText = sprintf($this->config[supported], $this->config[appName]);
                         }
                         $this->osVer = '8.1';
                         break;
@@ -267,24 +275,26 @@ class browser {
                     $shortVer = $shortVer[0];
                 }
                 else $shortVer = $this->version;
+
                 if($this->supportedBrowsers[$this->name]['minVer'] <= intval($shortVer)){
                     $this->supported   = true;
-                    $this->supportText = "Your browser version and FastFig are fully compatible!   There is nothing to worry about.   Go do some math! <a href='..'>Go Back</a>";
+                    $this->supportText = sprintf($this->config[supported][text], $this->config[appName]);
                 }
                 else {
-                    $this->supportText    = 'Fastfig does not support <b>this version</b> of '.$this->supportedBrowsers[$this->name]['fullName'].'.<br>';
-                    $this->suggestionText = $this->supportedBrowsers[$this->name]['upgrade'].'<br><br> Or you can try upgrading to one of these fine browsers:';
-                    
+                    $this->supportText    = sprintf($this->config[upgrade][text], $this->config[appName], $this->supportedBrowsers[$this->name]['fullName']);
+                    $this->suggestionText = sprintf($this->config[upgrade][suggestion], $this->supportedBrowsers[$this->name]['upgrade']);
                 }
             }
             else {
-                $this->supportText    = 'Fastfig does not support '.$this->name.' so we cannot say how well the site will work in this browser.';
-                $this->suggestionText = 'We suggest upgrading to one of these fine browsers:';
+                $this->supportText    = sprintf($this->config[upgrade][text], $this->name);
+                $this->suggestionText = sprintf($this->config[upgrade][suggestion]);
             }
         }
         return $this->supported;
     }
     
+
+
     public function drawBrowser(){
         $pad = '  ';
         if(array_key_exists($this->name, $this->supportedBrowsers)){
@@ -317,6 +327,7 @@ class browser {
 </table>';
     }
     
+
     public function drawDownloads(){
         foreach($this->supportedBrowsers as $prefs){
             if($prefs['recommend']){
