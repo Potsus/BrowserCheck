@@ -107,13 +107,13 @@ $browsers = array(
 
 $config = parse_ini_file('config.ini');
 foreach($config[browsers] as $browser => $version){
-    if(in_array($browser, $browsers)){
+    if($browsers[$browser]){
         $browsers[$browser][minVer] = $version;
     }
     else{
         //Fill in the missing browser or throw an error?
         // throw an exception to stop a user from going live with a bad browser config
-        throw new Exception("Unknown Browser in config. Please add it to supported_browsers.php");
+        throw new Exception("Unknown Browser: ".$browser." in config. Please add it to supported_browsers.php");
         
 
         /*
